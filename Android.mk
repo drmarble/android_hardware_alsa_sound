@@ -8,7 +8,6 @@ ifneq ($(strip $(TARGET_PROVIDES_LIBAUDIO)),true)
 
   LOCAL_PATH := $(call my-dir)
 
-  ifneq ($(TARGET_PROVIDES_LIBAUDIO),true)
   include $(CLEAR_VARS)
 
   LOCAL_ARM_MODE := arm
@@ -44,7 +43,6 @@ endif
 
   include $(BUILD_SHARED_LIBRARY)
 
-  endif
 # This is the ALSA audio policy manager
 
   include $(CLEAR_VARS)
