@@ -8,6 +8,7 @@ ifneq ($(strip $(TARGET_PROVIDES_LIBAUDIO)),true)
 
   LOCAL_PATH := $(call my-dir)
 
+  ifneq ($(TARGET_PROVIDES_LIBAUDIO),true)
   include $(CLEAR_VARS)
 
   LOCAL_ARM_MODE := arm
@@ -16,12 +17,12 @@ ifneq ($(strip $(TARGET_PROVIDES_LIBAUDIO)),true)
     LOCAL_C_INCLUDES += external/alsa-lib/include
 
   LOCAL_SRC_FILES := \
-	AudioHardwareALSA.cpp \
-	AudioStreamOutALSA.cpp \
-	AudioStreamInALSA.cpp \
-	ALSAStreamOps.cpp \
-	ALSAMixer.cpp \
-	ALSAControl.cpp
+    AudioHardwareALSA.cpp \
+    AudioStreamOutALSA.cpp \
+    AudioStreamInALSA.cpp \
+    ALSAStreamOps.cpp \
+    ALSAMixer.cpp \
+    ALSAControl.cpp
 
   LOCAL_MODULE := libaudio
   LOCAL_MODULE_TAGS:= optional
@@ -43,6 +44,7 @@ endif
 
   include $(BUILD_SHARED_LIBRARY)
 
+  endif
 # This is the ALSA audio policy manager
 
   include $(CLEAR_VARS)
@@ -86,8 +88,8 @@ endif
   LOCAL_SRC_FILES:= alsa_default.cpp
 
   LOCAL_SHARED_LIBRARIES := \
-  	libasound \
-  	liblog
+      libasound \
+      liblog
 
   LOCAL_MODULE:= alsa.default
   LOCAL_MODULE_TAGS:= optional
