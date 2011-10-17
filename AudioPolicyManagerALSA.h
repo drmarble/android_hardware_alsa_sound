@@ -46,13 +46,14 @@ public:
                                                           AudioSystem::device_connection_state state,
                                                           const char *device_address);
         uint32_t getDeviceForStrategy(routing_strategy strategy, bool fromCache = true);
+#if defined(HAS_FM_RADIO) || defined(OMAP_ENHANCEMENT)
         /* get Fm input source */
         audio_io_handle_t getFMInput(int inputSource,
                                             uint32_t samplingRate,
                                             uint32_t format,
                                             uint32_t channels,
                                             AudioSystem::audio_in_acoustics acoustics);
-
+#endif
         /* AudioPolicyManagerBase.cpp, in the stopoutoutput, setOutputDevice
          * is called by force(with flag true) which is causing Core is not going
          * to off/ret when A2DP is paused, Because output stream is activated
@@ -72,13 +73,17 @@ public:
          * to use a new channel bit CHANNEL_IN_VOICE_UPLINK_DNLINK to have also
          * voice call record in mono in case of inputsource AUDIO_SOURCE_VOICE_CALL.
          * */
+#ifdef OMAP_ENHANCEMENT
         audio_io_handle_t getInput(int inputSource,
                                         uint32_t samplingRate,
                                         uint32_t format,
                                         uint32_t channels,
                                         AudioSystem::audio_in_acoustics acoustics);
+#endif
 
+#if defined(HAS_FM_RADIO) || defined(OMAP_ENHANCEMENT)
         audio_io_handle_t mfmInput;       // FM input handler
+#endif
 };
 
 };

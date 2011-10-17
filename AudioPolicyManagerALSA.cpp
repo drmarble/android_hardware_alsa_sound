@@ -193,6 +193,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
                 mpClientInterface->setParameters(activeInput, param.toString());
             }
         }
+#if defined(HAS_FM_RADIO) || defined(OMAP_ENHANCEMENT)
         else {
            if (device == AudioSystem::DEVICE_IN_FM_ANALOG) {
                routing_strategy strategy = getStrategy((AudioSystem::stream_type)3);
@@ -246,6 +247,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
                 }
              }
       }
+#endif
         return NO_ERROR;
     }
 
@@ -386,11 +388,11 @@ uint32_t AudioPolicyManagerALSA::getDeviceForStrategy(routing_strategy strategy,
                     device2 = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_BLUETOOTH_SCO;
                  }
            }
-
+#if defined(HAS_FM_RADIO) || defined(OMAP_ENHANCEMENT)
             if (device2 == 0) {
                 device2 = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_FM_TRANSMIT;
             }
-
+#endif
             if (device2 == 0) {
                 device2 = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_SPEAKER;
             }
@@ -410,7 +412,7 @@ uint32_t AudioPolicyManagerALSA::getDeviceForStrategy(routing_strategy strategy,
          LOGV("getDeviceForStrategy() strategy %d, device %x", strategy, device);
          return device;
 }
-
+#if defined(HAS_FM_RADIO) || defined(OMAP_ENHANCEMENT)
 audio_io_handle_t AudioPolicyManagerALSA::getFMInput(int inputSource,
                                     uint32_t samplingRate,
                                     uint32_t format,
@@ -461,6 +463,7 @@ audio_io_handle_t AudioPolicyManagerALSA::getFMInput(int inputSource,
     mInputs.add(input, inputDesc);
     return input;
 }
+#endif
 
 status_t AudioPolicyManagerALSA::stopOutput(audio_io_handle_t output, AudioSystem::stream_type stream)
 {
@@ -513,6 +516,7 @@ status_t AudioPolicyManagerALSA::stopOutput(audio_io_handle_t output, AudioSyste
        }
 }
 
+#ifdef OMAP_ENHANCEMENT
 audio_io_handle_t AudioPolicyManagerALSA::getInput(int inputSource,
                                     uint32_t samplingRate,
                                     uint32_t format,
@@ -574,6 +578,8 @@ audio_io_handle_t AudioPolicyManagerALSA::getInput(int inputSource,
     mInputs.add(input, inputDesc);
     return input;
 }
+
+#endif
 
 // ----------------------------------------------------------------------------
 // AudioPolicyManagerALSA
