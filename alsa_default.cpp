@@ -134,6 +134,7 @@ static int s_device_open(const hw_module_t* module, const char* name,
 static int s_device_close(hw_device_t* device)
 {
     free(device);
+    device = NULL;
     return 0;
 }
 
@@ -335,7 +336,6 @@ void switchDevice(alsa_handle_t *handle, uint32_t devices, uint32_t mode)
             snd_use_case_set(handle->ucMgr, "_enadev", rxDevice);
         }
         strlcpy(curRxUCMDevice, rxDevice, sizeof(curRxUCMDevice));
-        free(rxDevice);
         if (devices & AudioSystem::DEVICE_OUT_FM)
             s_set_fm_vol(fmVolume);
     }
@@ -353,7 +353,6 @@ void switchDevice(alsa_handle_t *handle, uint32_t devices, uint32_t mode)
             snd_use_case_set(handle->ucMgr, "_enadev", txDevice);
         }
         strlcpy(curTxUCMDevice, txDevice, sizeof(curTxUCMDevice));
-        free(txDevice);
     }
 
     if (rxDevice != NULL) {
@@ -370,6 +369,14 @@ void switchDevice(alsa_handle_t *handle, uint32_t devices, uint32_t mode)
         }
     }
 
+    if (rxDevice != NULL) {
+        free(rxDevice);
+        rxDevice = NULL;
+    }
+    if (txDevice != NULL) {
+        free(txDevice);
+        txDevice = NULL;
+    }
     LOGD("switchDevice: curTxUCMDevivce %s curRxDevDevice %s", curTxUCMDevice, curRxUCMDevice);
 }
 
