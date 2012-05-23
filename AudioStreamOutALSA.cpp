@@ -106,10 +106,6 @@ ssize_t AudioStreamOutALSA::write(const void *buffer, size_t bytes)
     char *use_case;
 
     LOGV("write:: buffer %p, bytes %d", buffer, bytes);
-    if (!mPowerLock) {
-        acquire_wake_lock (PARTIAL_WAKE_LOCK, "AudioOutLock");
-        mPowerLock = true;
-    }
 
     snd_pcm_sframes_t n;
     size_t            sent = 0;
@@ -237,11 +233,6 @@ status_t AudioStreamOutALSA::close()
     LOGD("close");
     ALSAStreamOps::close();
 
-    if (mPowerLock) {
-        release_wake_lock ("AudioOutLock");
-        mPowerLock = false;
-    }
-
     return NO_ERROR;
 }
 
@@ -257,11 +248,6 @@ status_t AudioStreamOutALSA::standby()
     LOGD("standby");
 
     mHandle->module->standby(mHandle);
-
-    if (mPowerLock) {
-        release_wake_lock ("AudioOutLock");
-        mPowerLock = false;
-    }
 
     mFrameCount = 0;
 
