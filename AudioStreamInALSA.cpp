@@ -65,11 +65,6 @@ ssize_t AudioStreamInALSA::read(void *buffer, ssize_t bytes)
 
     LOGV("read:: buffer %p, bytes %d", buffer, bytes);
 
-    if (!mPowerLock) {
-        acquire_wake_lock (PARTIAL_WAKE_LOCK, "AudioInLock");
-        mPowerLock = true;
-    }
-
     int n;
     status_t          err;
     size_t            read = 0;
@@ -225,11 +220,6 @@ status_t AudioStreamInALSA::close()
     LOGD("close");
     ALSAStreamOps::close();
 
-    if (mPowerLock) {
-        release_wake_lock ("AudioInLock");
-        mPowerLock = false;
-    }
-
     return NO_ERROR;
 }
 
@@ -245,11 +235,6 @@ status_t AudioStreamInALSA::standby()
     LOGD("standby");
 
     mHandle->module->standby(mHandle);
-
-    if (mPowerLock) {
-        release_wake_lock ("AudioInLock");
-        mPowerLock = false;
-    }
 
     return NO_ERROR;
 }
