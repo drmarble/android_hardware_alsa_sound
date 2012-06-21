@@ -84,7 +84,8 @@ AudioHardwareALSA::AudioHardwareALSA() :
             } else {
                 while((fgets(soundCardInfo, sizeof(soundCardInfo), fp) != NULL)) {
                     LOGV("SoundCardInfo %s", soundCardInfo);
-                    if (strstr(soundCardInfo, "msm8960-tabla1x-snd-card")) {
+                    if (strstr(soundCardInfo, "msm8960-tabla1x-snd-card") ||
+                            strstr(soundCardInfo, "msm8960sndcard")) {
                         codec_rev = 1;
                         break;
                     }
