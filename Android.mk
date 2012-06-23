@@ -5,6 +5,7 @@
 
 ifeq ($(BOARD_USES_ALSA_AUDIO),true)
 ifeq ($(TARGET_BOARD_PLATFORM),msm8960)
+ifneq ($(TARGET_PROVIDES_LIBAUDIO),true)
 
 LOCAL_PATH := $(call my-dir)
 
@@ -110,5 +111,6 @@ LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
 
+endif # TARGET_PROVIDES_LIBAUDIO := true
 endif # TARGET_BOARD_PLATFORM := msm8960
 endif # BOARD_USES_ALSA_AUDIO :true
