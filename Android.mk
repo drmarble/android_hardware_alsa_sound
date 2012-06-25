@@ -43,6 +43,10 @@ LOCAL_C_INCLUDES += hardware/libhardware_legacy/include
 LOCAL_C_INCLUDES += frameworks/base/include
 LOCAL_C_INCLUDES += system/core/include
 
+ifeq ($(BOARD_HAVE_SAMSUNG_AUDIO),true)
+LOCAL_CFLAGS += -DSAMSUNG_AUDIO
+endif
+
 LOCAL_MODULE := audio.primary.msm8960
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_MODULE_TAGS := optional
