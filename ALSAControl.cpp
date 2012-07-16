@@ -33,7 +33,7 @@
 
 #include "AudioHardwareALSA.h"
 
-namespace android
+namespace android_audio_legacy
 {
 
 ALSAControl::ALSAControl(const char *device)
@@ -49,11 +49,11 @@ ALSAControl::~ALSAControl()
 status_t ALSAControl::getmin(const char *name, unsigned int &min)
 {
     if (!mHandle) {
-        LOGE("Control not initialized");
+        ALOGE("Control not initialized");
         return NO_INIT;
     }
 
-    LOGV("%s(%s, %d)", __FUNCTION__, name, min);
+    ALOGV("%s(%s, %d)", __FUNCTION__, name, min);
 
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_info_t *info;
@@ -67,7 +67,7 @@ status_t ALSAControl::getmin(const char *name, unsigned int &min)
 
     int ret = snd_ctl_elem_info(mHandle, info);
     if (ret < 0) {
-        LOGE("Control '%s' cannot get element info: %d", name, ret);
+        ALOGE("Control '%s' cannot get element info: %d", name, ret);
         return BAD_VALUE;
     }
 
@@ -79,11 +79,11 @@ status_t ALSAControl::getmin(const char *name, unsigned int &min)
 status_t ALSAControl::getmax(const char *name, unsigned int &max)
 {
     if (!mHandle) {
-        LOGE("Control not initialized");
+        ALOGE("Control not initialized");
         return NO_INIT;
     }
 
-    LOGV("%s(%s, %d)", __FUNCTION__, name, max);
+    ALOGV("%s(%s, %d)", __FUNCTION__, name, max);
 
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_info_t *info;
@@ -97,7 +97,7 @@ status_t ALSAControl::getmax(const char *name, unsigned int &max)
 
     int ret = snd_ctl_elem_info(mHandle, info);
     if (ret < 0) {
-        LOGE("Control '%s' cannot get element info: %d", name, ret);
+        ALOGE("Control '%s' cannot get element info: %d", name, ret);
         return BAD_VALUE;
     }
 
@@ -109,11 +109,11 @@ status_t ALSAControl::getmax(const char *name, unsigned int &max)
 status_t ALSAControl::get(const char *name, unsigned int &value, int index)
 {
     if (!mHandle) {
-        LOGE("Control not initialized");
+        ALOGE("Control not initialized");
         return NO_INIT;
     }
 
-    LOGV("%s(%s, %d, %d)", __FUNCTION__, name, value, index);
+    ALOGV("%s(%s, %d, %d)", __FUNCTION__, name, value, index);
 
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_info_t *info;
@@ -129,13 +129,13 @@ status_t ALSAControl::get(const char *name, unsigned int &value, int index)
 
     int ret = snd_ctl_elem_info(mHandle, info);
     if (ret < 0) {
-        LOGE("Control '%s' cannot get element info: %d", name, ret);
+        ALOGE("Control '%s' cannot get element info: %d", name, ret);
         return BAD_VALUE;
     }
 
     int count = snd_ctl_elem_info_get_count(info);
     if (index >= count) {
-        LOGE("Control '%s' index is out of range (%d >= %d)", name, index, count);
+        ALOGE("Control '%s' index is out of range (%d >= %d)", name, index, count);
         return BAD_VALUE;
     }
 
@@ -144,7 +144,7 @@ status_t ALSAControl::get(const char *name, unsigned int &value, int index)
 
     ret = snd_ctl_elem_read(mHandle, control);
     if (ret < 0) {
-        LOGE("Control '%s' cannot read element value: %d", name, ret);
+        ALOGE("Control '%s' cannot read element value: %d", name, ret);
         return BAD_VALUE;
     }
 
@@ -175,11 +175,11 @@ status_t ALSAControl::get(const char *name, unsigned int &value, int index)
 status_t ALSAControl::set(const char *name, unsigned int value, int index)
 {
     if (!mHandle) {
-        LOGE("Control not initialized");
+        ALOGE("Control not initialized");
         return NO_INIT;
     }
 
-    LOGV("%s(%s, %d, %d)", __FUNCTION__, name, value, index );
+    ALOGV("%s(%s, %d, %d)", __FUNCTION__, name, value, index );
 
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_info_t *info;
@@ -193,13 +193,13 @@ status_t ALSAControl::set(const char *name, unsigned int value, int index)
 
     int ret = snd_ctl_elem_info(mHandle, info);
     if (ret < 0) {
-        LOGE("Control '%s' cannot get element info: %d", name, ret);
+        ALOGE("Control '%s' cannot get element info: %d", name, ret);
         return BAD_VALUE;
     }
 
     int count = snd_ctl_elem_info_get_count(info);
     if (index >= count) {
-        LOGE("Control '%s' index is out of range (%d >= %d)", name, index, count);
+        ALOGE("Control '%s' index is out of range (%d >= %d)", name, index, count);
         return BAD_VALUE;
     }
 
@@ -244,11 +244,11 @@ status_t ALSAControl::set(const char *name, unsigned int value, int index)
 status_t ALSAControl::set(const char *name, const char *value)
 {
     if (!mHandle) {
-        LOGE("Control not initialized");
+        ALOGE("Control not initialized");
         return NO_INIT;
     }
 
-    LOGV("%s(%s, %s)", __FUNCTION__, name, value);
+    ALOGV("%s(%s, %s)", __FUNCTION__, name, value);
 
     snd_ctl_elem_id_t *id;
     snd_ctl_elem_info_t *info;
@@ -262,7 +262,7 @@ status_t ALSAControl::set(const char *name, const char *value)
 
     int ret = snd_ctl_elem_info(mHandle, info);
     if (ret < 0) {
-        LOGE("Control '%s' cannot get element info: %d", name, ret);
+        ALOGE("Control '%s' cannot get element info: %d", name, ret);
         return BAD_VALUE;
     }
 
@@ -275,9 +275,9 @@ status_t ALSAControl::set(const char *name, const char *value)
             return set(name, i, -1);
     }
 
-    LOGE("Control '%s' has no enumerated value of '%s'", name, value);
+    ALOGE("Control '%s' has no enumerated value of '%s'", name, value);
 
     return BAD_VALUE;
 }
 
-};        // namespace android
+};        // namespace android_audio_legacy

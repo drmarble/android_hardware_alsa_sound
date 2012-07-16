@@ -20,7 +20,7 @@
 #include "AudioPolicyManagerALSA.h"
 #include <media/mediarecorder.h>
 
-namespace android {
+namespace android_audio_legacy {
 
 status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_devices device,
                                                   AudioSystem::device_connection_state state,
@@ -33,7 +33,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
     if (AudioSystem::popCount(device) != 1) return BAD_VALUE;
 
     if (strlen(device_address) >= MAX_DEVICE_ADDRESS_LEN) {
-        LOGE("setDeviceConnectionState() invalid address: %s", device_address);
+        ALOGE("setDeviceConnectionState() invalid address: %s", device_address);
         return BAD_VALUE;
     }
 
@@ -42,7 +42,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
 
 #ifndef WITH_A2DP
         if (AudioSystem::isA2dpDevice(device)) {
-            LOGE("setDeviceConnectionState() invalid device: %x", device);
+            ALOGE("setDeviceConnectionState() invalid device: %x", device);
             return BAD_VALUE;
         }
 #endif
@@ -52,7 +52,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
         // handle output device connection
         case AudioSystem::DEVICE_STATE_AVAILABLE:
             if (mAvailableOutputDevices & device) {
-                LOGW("setDeviceConnectionState() device already connected: %x", device);
+                ALOGW("setDeviceConnectionState() device already connected: %x", device);
                 return INVALID_OPERATION;
             }
             LOGV("setDeviceConnectionState() connecting device %x", device);
@@ -87,7 +87,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
         // handle output device disconnection
         case AudioSystem::DEVICE_STATE_UNAVAILABLE: {
             if (!(mAvailableOutputDevices & device)) {
-                LOGW("setDeviceConnectionState() device not connected: %x", device);
+                ALOGW("setDeviceConnectionState() device not connected: %x", device);
                 return INVALID_OPERATION;
             }
 
@@ -120,7 +120,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
             } break;
 
         default:
-            LOGE("setDeviceConnectionState() invalid state: %x", state);
+            ALOGE("setDeviceConnectionState() invalid state: %x", state);
             return BAD_VALUE;
         }
 
@@ -159,7 +159,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
         // handle input device connection
         case AudioSystem::DEVICE_STATE_AVAILABLE: {
             if (mAvailableInputDevices & device) {
-                LOGW("setDeviceConnectionState() device already connected: %d", device);
+                ALOGW("setDeviceConnectionState() device already connected: %d", device);
                 return INVALID_OPERATION;
             }
             mAvailableInputDevices |= device;
@@ -169,14 +169,14 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
         // handle input device disconnection
         case AudioSystem::DEVICE_STATE_UNAVAILABLE: {
             if (!(mAvailableInputDevices & device)) {
-                LOGW("setDeviceConnectionState() device not connected: %d", device);
+                ALOGW("setDeviceConnectionState() device not connected: %d", device);
                 return INVALID_OPERATION;
             }
             mAvailableInputDevices &= ~device;
             } break;
 
         default:
-            LOGE("setDeviceConnectionState() invalid state: %x", state);
+            ALOGE("setDeviceConnectionState() invalid state: %x", state);
             return BAD_VALUE;
         }
 
@@ -251,7 +251,7 @@ status_t AudioPolicyManagerALSA::setDeviceConnectionState(AudioSystem::audio_dev
         return NO_ERROR;
     }
 
-    LOGW("setDeviceConnectionState() invalid device: %x", device);
+    ALOGW("setDeviceConnectionState() invalid device: %x", device);
     return BAD_VALUE;
 }
 
@@ -305,7 +305,7 @@ uint32_t AudioPolicyManagerALSA::getDeviceForStrategy(routing_strategy strategy,
 #endif
               device = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_EARPIECE;
               if (device == 0) {
-                  LOGE("getDeviceForStrategy() earpiece device not found");
+                  ALOGE("getDeviceForStrategy() earpiece device not found");
               }
               break;
 
@@ -324,7 +324,7 @@ uint32_t AudioPolicyManagerALSA::getDeviceForStrategy(routing_strategy strategy,
 #endif
               device = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_SPEAKER;
               if (device == 0) {
-                   LOGE("getDeviceForStrategy() speaker device not found");
+                   ALOGE("getDeviceForStrategy() speaker device not found");
               }
               break;
            }
@@ -341,7 +341,7 @@ uint32_t AudioPolicyManagerALSA::getDeviceForStrategy(routing_strategy strategy,
               }
               device = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_SPEAKER;
               if (device == 0) {
-                  LOGE("getDeviceForStrategy() speaker device not found");
+                  ALOGE("getDeviceForStrategy() speaker device not found");
               }
              // The second device used for sonification is the same as the device used by media strategy
              // FALL THROUGH
@@ -401,12 +401,12 @@ uint32_t AudioPolicyManagerALSA::getDeviceForStrategy(routing_strategy strategy,
             // device is DEVICE_OUT_SPEAKER if we come from case STRATEGY_SONIFICATION, 0 otherwise
             device |= device2;
             if (device == 0) {
-                 LOGE("getDeviceForStrategy() speaker device not found");
+                 ALOGE("getDeviceForStrategy() speaker device not found");
             }
             } break;
 
          default:
-            LOGW("getDeviceForStrategy() unknown strategy: %d", strategy);
+            ALOGW("getDeviceForStrategy() unknown strategy: %d", strategy);
               break;
          }
 
@@ -471,7 +471,7 @@ status_t AudioPolicyManagerALSA::stopOutput(audio_io_handle_t output, AudioSyste
         LOGV("stopOutput() output %d, stream %d", output, stream);
         ssize_t index = mOutputs.indexOfKey(output);
         if (index < 0) {
-        LOGW("stopOutput() unknow output %d", output);
+        ALOGW("stopOutput() unknow output %d", output);
         return BAD_VALUE;
         }
         AudioOutputDescriptor *outputDesc = mOutputs.valueAt(index);
@@ -512,7 +512,7 @@ status_t AudioPolicyManagerALSA::stopOutput(audio_io_handle_t output, AudioSyste
            }
            return NO_ERROR;
            } else {
-              LOGW("stopOutput() refcount is already 0 for output %d", output);
+              ALOGW("stopOutput() refcount is already 0 for output %d", output);
               return INVALID_OPERATION;
        }
 }
@@ -609,4 +609,4 @@ AudioPolicyManagerALSA::~AudioPolicyManagerALSA()
 {
 }
 
-}; // namespace android
+}; // namespace android_audio_legacy

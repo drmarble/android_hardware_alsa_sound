@@ -20,12 +20,14 @@
 
 #include <utils/List.h>
 #include <hardware_legacy/AudioHardwareBase.h>
+#include <hardware_legacy/AudioHardwareInterface.h>
+#include <hardware_legacy/AudioSystemLegacy.h>
 
 #include <alsa/asoundlib.h>
 
 #include <hardware/hardware.h>
 
-namespace android
+namespace android_audio_legacy
 {
 
 class AudioHardwareALSA;
@@ -54,7 +56,7 @@ struct alsa_handle_t {
     void *              modPrivate;
 };
 
-typedef List<alsa_handle_t> ALSAHandleList;
+typedef android::List<alsa_handle_t> ALSAHandleList;
 
 struct alsa_device_t {
     hw_device_t common;
@@ -164,7 +166,7 @@ protected:
     AudioHardwareALSA *     mParent;
     alsa_handle_t *         mHandle;
 
-    Mutex                   mLock;
+    android::Mutex                   mLock;
     bool                    mPowerLock;
 };
 
@@ -278,6 +280,14 @@ public:
     status_t            open(int mode);
     status_t            close();
 
+    /* XXXXXX */
+    virtual status_t addAudioEffect(effect_interface_s **) {
+	    return NO_ERROR;
+    }
+    virtual status_t removeAudioEffect(effect_interface_s **) {
+	    return NO_ERROR;
+    }
+
 private:
     void                resetFramesLost();
 
@@ -371,10 +381,10 @@ protected:
     ALSAHandleList      mDeviceList;
 
 private:
-    Mutex               mLock;
+    android::Mutex               mLock;
 };
 
 // ----------------------------------------------------------------------------
 
-};        // namespace android
+};        // namespace android_audio_legacy
 #endif    // ANDROID_AUDIO_HARDWARE_ALSA_H

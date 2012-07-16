@@ -38,12 +38,12 @@ extern "C"
     //
     // Function for dlsym() to look up for creating a new AudioHardwareInterface.
     //
-    android::AudioHardwareInterface *createAudioHardware(void) {
-        return android::AudioHardwareALSA::create();
+    android_audio_legacy::AudioHardwareInterface *createAudioHardware(void) {
+        return android_audio_legacy::AudioHardwareALSA::create();
     }
 }         // extern "C"
 
-namespace android
+namespace android_audio_legacy
 {
 
 // ----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ static void ALSAErrorHandler(const char *file,
     l = snprintf(buf, BUFSIZ, "%s:%i:(%s) ", file, line, function);
     vsnprintf(buf + l, BUFSIZ - l, fmt, arg);
     buf[BUFSIZ-1] = '\0';
-    LOG(LOG_ERROR, "ALSALib", "%s", buf);
+    ALOG(LOG_ERROR, "ALSALib", "%s", buf);
     va_end(arg);
 }
 
@@ -89,9 +89,9 @@ AudioHardwareALSA::AudioHardwareALSA() :
             mALSADevice = (alsa_device_t *)device;
             mALSADevice->init(mALSADevice, mDeviceList);
         } else
-            LOGE("ALSA Module could not be opened!!!");
+            ALOGE("ALSA Module could not be opened!!!");
     } else
-        LOGE("ALSA Module not found!!!");
+        ALOGE("ALSA Module not found!!!");
 
     err = hw_get_module(ACOUSTICS_HARDWARE_MODULE_ID,
             (hw_module_t const**)&module);
@@ -102,7 +102,7 @@ AudioHardwareALSA::AudioHardwareALSA() :
         if (err == 0)
             mAcousticDevice = (acoustic_device_t *)device;
         else
-            LOGE("Acoustics Module not found.");
+            ALOGE("Acoustics Module not found.");
     }
 }
 
@@ -167,11 +167,11 @@ status_t AudioHardwareALSA::setMode(int mode)
 status_t AudioHardwareALSA::setParameters(const String8& keyValuePairs)
 {
     if (mALSADevice && mALSADevice->set){
-        LOGI("setParameters got %s", keyValuePairs.string());
+        ALOGI("setParameters got %s", keyValuePairs.string());
         return mALSADevice->set(keyValuePairs);
     }
     else {
-        LOGE("setParameters INVALID OPERATION");
+        ALOGE("setParameters INVALID OPERATION");
         return INVALID_OPERATION;
     }
 }
@@ -183,16 +183,16 @@ AudioHardwareALSA::openOutputStream(uint32_t devices,
                                     uint32_t *sampleRate,
                                     status_t *status)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
-    LOGD("openOutputStream called for devices: 0x%08x", devices);
+    ALOGD("openOutputStream called for devices: 0x%08x", devices);
 
     status_t err = BAD_VALUE;
     AudioStreamOutALSA *out = 0;
 
     if (devices & (devices - 1)) {
         if (status) *status = err;
-        LOGD("openOutputStream called with bad devices");
+        ALOGD("openOutputStream called with bad devices");
         return out;
     }
 
@@ -214,7 +214,7 @@ AudioHardwareALSA::openOutputStream(uint32_t devices,
 void
 AudioHardwareALSA::closeOutputStream(AudioStreamOut* out)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
     delete out;
 }
 
@@ -226,7 +226,7 @@ AudioHardwareALSA::openInputStream(uint32_t devices,
                                    status_t *status,
                                    AudioSystem::audio_in_acoustics acoustics)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
 
     status_t err = BAD_VALUE;
     AudioStreamInALSA *in = 0;
@@ -259,15 +259,15 @@ size_t AudioHardwareALSA::getInputBufferSize(uint32_t sampleRate, int format, in
         sampleRate == 16000 ||
         sampleRate == 44100 ||
         sampleRate == 48000)) {
-        LOGW("getInputBufferSize bad sampling rate: %d", sampleRate);
+        ALOGW("getInputBufferSize bad sampling rate: %d", sampleRate);
         return 0;
     }
     if (format != AudioSystem::PCM_16_BIT) {
-        LOGW("getInputBufferSize bad format: %d", format);
+        ALOGW("getInputBufferSize bad format: %d", format);
         return 0;
     }
     if (channelCount != 1) {
-        LOGW("getInputBufferSize bad channel count: %d", channelCount);
+        ALOGW("getInputBufferSize bad channel count: %d", channelCount);
         return 0;
     }
 
@@ -277,7 +277,7 @@ size_t AudioHardwareALSA::getInputBufferSize(uint32_t sampleRate, int format, in
 void
 AudioHardwareALSA::closeInputStream(AudioStreamIn* in)
 {
-    AutoMutex lock(mLock);
+    android::AutoMutex lock(mLock);
     delete in;
 }
 
@@ -302,4 +302,4 @@ status_t AudioHardwareALSA::dump(int fd, const Vector<String16>& args)
     return NO_ERROR;
 }
 
-}       // namespace android
+}       // namespace android_audio_legacy
