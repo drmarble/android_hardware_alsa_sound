@@ -26,7 +26,7 @@ ifneq ($(strip $(TARGET_PROVIDES_LIBAUDIO)),true)
   LOCAL_MODULE := libaudio
   LOCAL_MODULE_TAGS:= optional
 
-  LOCAL_STATIC_LIBRARIES += libaudiointerface
+  LOCAL_STATIC_LIBRARIES += libaudiohw_legacy
 
   LOCAL_SHARED_LIBRARIES := \
     libasound \
@@ -37,9 +37,10 @@ ifneq ($(strip $(TARGET_PROVIDES_LIBAUDIO)),true)
     libhardware_legacy \
     libc
 
-ifeq ($(BOARD_HAVE_BLUETOOTH),true)
-  LOCAL_SHARED_LIBRARIES += liba2dp
-endif
+# a2dp handling has moved into a separate HAL
+#ifeq ($(BOARD_HAVE_BLUETOOTH),true)
+#  LOCAL_SHARED_LIBRARIES += liba2dp
+#endif
 
   include $(BUILD_SHARED_LIBRARY)
 
