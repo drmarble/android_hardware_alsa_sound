@@ -19,6 +19,7 @@
 #define ANDROID_AUDIO_HARDWARE_ALSA_H
 
 #include <utils/List.h>
+#include <utils/Mutex.h>
 #include <hardware_legacy/AudioHardwareBase.h>
 #include <hardware_legacy/AudioHardwareInterface.h>
 #include <hardware_legacy/AudioSystemLegacy.h>
