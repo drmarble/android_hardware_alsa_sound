@@ -26,7 +26,7 @@ ifneq ($(strip $(TARGET_PROVIDES_LIBAUDIO)),true)
   LOCAL_MODULE := libaudio
   LOCAL_MODULE_TAGS:= optional
 
-  LOCAL_STATIC_LIBRARIES += libaudiohw_legacy
+  LOCAL_STATIC_LIBRARIES += libaudiohw_legacy libmedia_helper
 
   LOCAL_SHARED_LIBRARIES := \
     libasound \
