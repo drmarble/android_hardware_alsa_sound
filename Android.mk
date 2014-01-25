@@ -10,7 +10,6 @@ ifneq ($(strip $(TARGET_PROVIDES_LIBAUDIO)),true)
 
   include $(CLEAR_VARS)
 
-  LOCAL_ARM_MODE := arm
   LOCAL_CFLAGS := -D_POSIX_SOURCE
 
     LOCAL_C_INCLUDES += external/alsa-lib/include
