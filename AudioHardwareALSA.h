@@ -332,7 +332,7 @@ public:
     // set/get global audio parameters
     virtual status_t    setParameters(const String8& keyValuePairs);
 
-    //virtual String8     getParameters(const String8& keys);
+    virtual String8     getParameters(const String8& keys);
 
     // Returns audio input buffer size according to parameters passed or 0 if one of the
     // parameters is not supported
@@ -341,6 +341,13 @@ public:
     /** This method creates and opens the audio hardware output stream */
     virtual AudioStreamOut* openOutputStream(
             uint32_t devices,
+            int *format=0,
+            uint32_t *channels=0,
+            uint32_t *sampleRate=0,
+            status_t *status=0);
+    virtual AudioStreamOut* openOutputStreamWithFlags(
+            uint32_t devices,
+            audio_output_flags_t flags=(audio_output_flags_t)0,
             int *format=0,
             uint32_t *channels=0,
             uint32_t *sampleRate=0,

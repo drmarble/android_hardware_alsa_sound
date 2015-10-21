@@ -175,6 +175,27 @@ status_t AudioHardwareALSA::setParameters(const String8& keyValuePairs)
         return INVALID_OPERATION;
     }
 }
+String8 AudioHardwareALSA::getParameters(const String8& keys)
+{
+    AudioParameter param = AudioParameter(keys);
+    String8 value;
+	String8 key;
+    int device;
+
+    ALOGV("AudioHardwareALSA::getParameters() %s", param.toString().string());
+    return param.toString();
+}
+
+// default implementation calls its "without flags" counterpart
+AudioStreamOut* AudioHardwareALSA::openOutputStreamWithFlags(uint32_t devices,
+                                          audio_output_flags_t flags,
+                                          int *format,
+                                          uint32_t *channels,
+                                          uint32_t *sampleRate,
+                                          status_t *status)
+{
+    return openOutputStream(devices, format, channels, sampleRate, status);
+}
 
 AudioStreamOut *
 AudioHardwareALSA::openOutputStream(uint32_t devices,
