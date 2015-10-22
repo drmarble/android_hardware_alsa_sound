@@ -217,6 +217,8 @@ public:
     // the output has exited standby
     virtual status_t    getRenderPosition(uint32_t *dspFrames);
 
+    virtual status_t    getPresentationPosition(uint64_t *frames, struct timespec *timestamp);
+
     status_t            open(int mode);
     status_t            close();
 
@@ -367,12 +369,52 @@ public:
     /**This method dumps the state of the audio hardware */
     //virtual status_t dumpState(int fd, const Vector<String16>& args);
 
+    virtual status_t setMasterMute(bool muted);
+
     static AudioHardwareInterface* create();
 
     int                 mode()
     {
         return mMode;
     }
+
+    virtual int createAudioPatch(unsigned int num_sources,
+                               const struct audio_port_config *sources,
+                               unsigned int num_sinks,
+                               const struct audio_port_config *sinks,
+                               audio_patch_handle_t *handle);
+
+    virtual int releaseAudioPatch(audio_patch_handle_t handle);
+
+    virtual int getAudioPort(struct audio_port *port);
+
+    virtual int setAudioPortConfig(const struct audio_port_config *config);
+
+    void pauseIfUseCaseTunnelOrLPA();
+    void resumeIfUseCaseTunnelOrLPA();
+#ifdef HWDEP_CAL_ENABLED
+    void initCodecCalib(void);
+#endif
+private:
+    status_t     openExtOutput(int device);
+    status_t     closeExtOutput(int device);
+    status_t     openA2dpOutput();
+    status_t     closeA2dpOutput();
+    status_t     openUsbOutput();
+    status_t     closeUsbOutput();
+    status_t     stopExtOutThread();
+    void         extOutThreadFunc();
+    static void* extOutThreadWrapper(void *context);
+    void         setExtOutActiveUseCases_l(uint32_t activeUsecase);
+    uint32_t     getExtOutActiveUseCases_l();
+    void         clearExtOutActiveUseCases_l(uint32_t activeUsecase);
+    uint32_t     useCaseStringToEnum(const char *usecase);
+    void         switchExtOut(int device);
+    bool         isAnyCallActive();
+    int*         getCallStateForVSID(uint32_t vsid);
+    char*        getUcmVerbForVSID(uint32_t vsid);
+    char*        getUcmModForVSID(uint32_t vsid);
+    alsa_handle_t* getALSADeviceHandleForVSID(uint32_t vsid);
 
 protected:
     virtual status_t    dump(int fd, const Vector<String16>& args);

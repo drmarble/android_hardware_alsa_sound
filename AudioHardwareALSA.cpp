@@ -323,4 +323,29 @@ status_t AudioHardwareALSA::dump(int fd, const Vector<String16>& args)
     return NO_ERROR;
 }
 
+status_t AudioHardwareALSA::setMasterMute(bool muted) {
+    return INVALID_OPERATION;
+}
+
+int AudioHardwareALSA::createAudioPatch(unsigned int num_sources,
+        const struct audio_port_config *sources,
+        unsigned int num_sinks,
+        const struct audio_port_config *sinks,
+        audio_patch_handle_t *handle) {
+    return INVALID_OPERATION;
+}
+
+int AudioHardwareALSA::releaseAudioPatch(audio_patch_handle_t handle) {
+    return INVALID_OPERATION;
+}
+
+int AudioHardwareALSA::getAudioPort(struct audio_port *port) {
+    return INVALID_OPERATION;
+}
+
+int AudioHardwareALSA::setAudioPortConfig(
+        const struct audio_port_config *config) {
+    return INVALID_OPERATION;
+}
+
 }       // namespace android_audio_legacy
