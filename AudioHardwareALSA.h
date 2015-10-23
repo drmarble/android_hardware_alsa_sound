@@ -217,7 +217,7 @@ public:
     // the output has exited standby
     virtual status_t    getRenderPosition(uint32_t *dspFrames);
 
-    virtual status_t    getPresentationPosition(uint64_t *frames, struct timespec *timestamp);
+//drm    virtual status_t    getPresentationPosition(uint64_t *frames, struct timespec *timestamp);
 
     status_t            open(int mode);
     status_t            close();
